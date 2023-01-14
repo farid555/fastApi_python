@@ -3,6 +3,9 @@ from fastapi import FastAPI, Response, HTTPException, status
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import time
 
 
 app = FastAPI()
@@ -13,6 +16,20 @@ class Post(BaseModel):  # pydantic_Model
     content: str
     published: bool = True
     rating: Optional[int] = None
+
+
+while True:
+
+    try:
+        conn = psycopg2.connect(
+            host='localhost', database='fastApi', user='postgres', password='farid555', cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
+        print("database connection was succesful!")
+        break
+    except Exception as error:
+        print("Connection to database failed")
+        print("Error", error)
+        time.sleep(2)
 
 
 my_posts = [{"title": "Python", "content": "It is powerful, user-friendly and easy to learn.", "id": 1}, {
@@ -31,7 +48,7 @@ def find_post(id):
 def find_index_post(id):
     for index, p in enumerate(my_posts):
         if p['id'] == id:
-            print(p)
+            print("T4", p)
             return index
 
 
@@ -77,11 +94,14 @@ def delete_post(id: int):
 @app.put("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def update_post(id: int, post: Post):
     update_post_index = find_index_post(id)
+    print("T1", update_post_index)
     if update_post_index == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} was not found")
 
     post_dict_update = post.dict()
+    print("T2", post_dict_update)
     post_dict_update["id"] = id
+    print("T3", id)
     my_posts[update_post_index] = post_dict_update
     return {"data": post_dict_update}
