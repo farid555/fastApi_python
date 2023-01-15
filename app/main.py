@@ -60,7 +60,8 @@ def find_index_post(id):
 # test Database create
 @app.get("/test")
 def test_posts(db: Session = Depends(get_db)):
-    return {"message": "Hello there!"}
+    post = db.query(models.Post).all()
+    return {"message": post}
 
 
 # Get all post
