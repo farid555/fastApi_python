@@ -1,7 +1,15 @@
 from pydantic import BaseModel
 
 
-class Post(BaseModel):  # pydantic_Model
+class PostBase(BaseModel):  # pydantic_Model
     title: str
     content: str
     published: bool = True
+
+
+class PostCreate(PostBase):
+    pass
+
+
+    
+

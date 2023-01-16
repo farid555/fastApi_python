@@ -15,9 +15,6 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-    
-
-
 while True:
 
     try:
@@ -59,12 +56,12 @@ def find_index_post(id):
 @app.get("/posts")
 def get_posts(db: Session = Depends(get_db)):
     post = db.query(models.Post).all()
-    return {"data": post}
+    return post
 
 
 # Create post
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_posts(post: schemas.Post, db: Session = Depends(get_db)):
+def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
     print(post.dict())
     new_post = models.Post(**post.dict()
                            )
@@ -72,7 +69,7 @@ def create_posts(post: schemas.Post, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_post)
 
-    return {"data": "new_post"}
+    return new_post
 
 
 # Get single post
@@ -83,7 +80,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} was not found")
-    return {"post_details": post}
+    return post
 
 
 # Delete Post
@@ -99,29 +96,10 @@ def delete_post(id: int, db: Session = Depends(get_db)):
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-'''
-# Update Post
-@app.put("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def update_post(id: int, updated_post: Post, db: Session = Depends(get_db)):
-    
 
-    post_query = db.query(models.Post).filter(models.Post.id == id)
-    post = post_query.first()
-    if post == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"post with id: {id} was not found")
-
-    post_query.update(updated_post.dict(), synchronize_session=False)
-    db.commit()
-    return {"data": "succssfull"}
-'''
-
+# Update
 @app.put("/posts/{id}")
-def updated_post(id: int, newly_post: schemas.Post, db: Session = Depends(get_db)):
-    # cursor.execute("""UPDATE posts SET title = %s, content = %s, published = %s WHERE id = %s RETURNING *""",
-    # (post.title, post.content, post.published, (str(id))))
-    # updated_post = cursor.fetchone()
-    # conn.commit()
+def updated_post(id: int, newly_post: schemas.PostCreate, db: Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
     if post == None:
@@ -130,4 +108,3 @@ def updated_post(id: int, newly_post: schemas.Post, db: Session = Depends(get_db
     post_query.update(newly_post.dict(), synchronize_session=False)
     db.commit()
     return post_query.first()
-    
