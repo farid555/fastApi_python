@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from fastapi import FastAPI, Response, HTTPException, status, Depends
 from fastapi.params import Body
 from random import randrange
@@ -53,14 +53,14 @@ def find_index_post(id):
 
 
 # Get all post
-@app.get("/posts")
+@app.get("/posts", response_model=List[schemas.Post])
 def get_posts(db: Session = Depends(get_db)):
     post = db.query(models.Post).all()
     return post
 
 
 # Create post
-@app.post("/posts", status_code=status.HTTP_201_CREATED)
+@app.post("/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
     print(post.dict())
     new_post = models.Post(**post.dict()
@@ -68,12 +68,11 @@ def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
-
     return new_post
 
 
 # Get single post
-@app.get("/posts/{id}")
+@app.get("/posts/{id}", response_model=schemas.Post)
 def get_post(id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     print("get", post)
@@ -98,7 +97,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
 
 # Update
-@app.put("/posts/{id}")
+@app.put("/posts/{id}", response_model=schemas.Post)
 def updated_post(id: int, newly_post: schemas.PostCreate, db: Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
