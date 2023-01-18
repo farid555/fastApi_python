@@ -62,7 +62,6 @@ def get_posts(db: Session = Depends(get_db)):
 # Create post
 @app.post("/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
-    print(post.dict())
     new_post = models.Post(**post.dict()
                            )
     db.add(new_post)
@@ -107,3 +106,22 @@ def updated_post(id: int, newly_post: schemas.PostCreate, db: Session = Depends(
     post_query.update(newly_post.dict(), synchronize_session=False)
     db.commit()
     return post_query.first()
+
+
+# Get all user
+@app.get("/users")
+def get_users(db: Session = Depends(get_db)):
+    user = db.query(models.User).all()
+    return user
+
+
+# Create User
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+def create_users(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    print(user.dict())
+    new_user = models.User(**user.dict()
+                           )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
