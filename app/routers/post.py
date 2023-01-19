@@ -1,4 +1,4 @@
-from .. import models, schemas
+from .. import models, schemas, oauth2
 from typing import List
 from fastapi import Response, HTTPException, status, Depends, APIRouter
 from ..database import get_db
@@ -20,7 +20,7 @@ def get_posts(db: Session = Depends(get_db)):
 
 # Create post
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
-def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
+def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), get_current_user: int = Depends(oauth2.get_Current_User)):
     new_post = models.Post(**post.dict()
                            )
     db.add(new_post)
@@ -30,8 +30,8 @@ def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
 
 
 # Get single post
-@router.get("/{id}", response_model=schemas.Post)
-def get_post(id: int, db: Session = Depends(get_db)):
+@ router.get("/{id}", response_model=schemas.Post)
+def get_post(id: int, db: Session = Depends(get_db), get_current_user: int = Depends(oauth2.get_Current_User)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     print("get", post)
     if not post:
@@ -41,8 +41,8 @@ def get_post(id: int, db: Session = Depends(get_db)):
 
 
 # Delete Post
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db)):
+@ router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(id: int, db: Session = Depends(get_db), get_current_user: int = Depends(oauth2.get_Current_User)):
     post = db.query(models.Post).filter(models.Post.id == id)
 
     if post.first() == None:
@@ -55,8 +55,8 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
 
 # Update
-@router.put("/{id}", response_model=schemas.Post)
-def updated_post(id: int, newly_post: schemas.PostCreate, db: Session = Depends(get_db)):
+@ router.put("/{id}", response_model=schemas.Post)
+def updated_post(id: int, newly_post: schemas.PostCreate, db: Session = Depends(get_db), get_current_user: int = Depends(oauth2.get_Current_User)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
     if post == None:
