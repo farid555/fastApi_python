@@ -45,3 +45,8 @@ class UserOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class UserLogin(BaseModel): #login user model
+    email: EmailStr
+    password: str
