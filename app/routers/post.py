@@ -20,9 +20,10 @@ def get_posts(db: Session = Depends(get_db)):
 
 # Create post
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
-def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), get_current_user: int = Depends(oauth2.get_Current_User)):
+def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_Current_User)):
     new_post = models.Post(**post.dict()
                            )
+    print(current_user.email)
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -31,7 +32,7 @@ def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), get_cu
 
 # Get single post
 @ router.get("/{id}", response_model=schemas.Post)
-def get_post(id: int, db: Session = Depends(get_db), get_current_user: int = Depends(oauth2.get_Current_User)):
+def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_Current_User)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     print("get", post)
     if not post:
@@ -42,7 +43,7 @@ def get_post(id: int, db: Session = Depends(get_db), get_current_user: int = Dep
 
 # Delete Post
 @ router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db), get_current_user: int = Depends(oauth2.get_Current_User)):
+def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_Current_User)):
     post = db.query(models.Post).filter(models.Post.id == id)
 
     if post.first() == None:
@@ -56,7 +57,7 @@ def delete_post(id: int, db: Session = Depends(get_db), get_current_user: int = 
 
 # Update
 @ router.put("/{id}", response_model=schemas.Post)
-def updated_post(id: int, newly_post: schemas.PostCreate, db: Session = Depends(get_db), get_current_user: int = Depends(oauth2.get_Current_User)):
+def updated_post(id: int, newly_post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_Current_User)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
     if post == None:
