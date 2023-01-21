@@ -3,6 +3,7 @@ from typing import List
 from fastapi import Response, HTTPException, status, Depends, APIRouter
 from ..database import get_db
 from sqlalchemy.orm import Session
+from typing import Optional
 
 
 router = APIRouter(
@@ -11,11 +12,14 @@ router = APIRouter(
 )
 
 
-# Get all post
-@router.get("/", response_model=List[schemas.Post])
-def get_posts(db: Session = Depends(get_db),  current_user: int = Depends(oauth2.get_Current_User)):
+# Get all post....// {{URL}}posts?limit=5&skip=1&search=python---search=Finland%20Helsinki
 
-    posts = db.query(models.Post).all()
+@router.get("/", response_model=List[schemas.Post])
+def get_posts(db: Session = Depends(get_db),  current_user: int = Depends(oauth2.get_Current_User),
+              limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+
+    posts = db.query(models.Post).filter(
+        models.Post.title.contains(search)).limit(limit).offset(skip).all()
 
     return posts
 
