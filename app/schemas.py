@@ -26,10 +26,8 @@ class Post(BaseModel):  # sending limited property in frontend
 
 class Post(PostBase):  # sending limited property in frontend
     id: int
-    title: str
-    content: str
-    published: bool
     created_at: datetime
+    owner_id: int
 
     class Config:
         orm_mode = True
