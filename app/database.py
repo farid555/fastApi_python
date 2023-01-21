@@ -3,9 +3,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import psycopg2
 import time
+from .config import settings
 
 
-SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:farid555@localhost/postgres'
+
+SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -26,6 +28,7 @@ def get_db():
 
 
 '''
+#demo
 while True:
 
     try:
@@ -38,4 +41,5 @@ while True:
         print("Connection to database failed")
         print("Error", error)
         time.sleep(2)
+
 '''
