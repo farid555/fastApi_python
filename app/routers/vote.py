@@ -16,13 +16,6 @@ def vote(
     current_user: int = Depends(oauth2.get_Current_User),
 ):
 
-    post = db.query(models.Post).filter(models.Post.id == vote.post.id).first()
-    if not post:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"post with id: {vote.post.id} does not exist",
-        )
-
     vote_query = db.query(models.Vote).filter(
         models.Vote.post_id == vote.post_id, models.Vote.user_id == current_user.id
     )

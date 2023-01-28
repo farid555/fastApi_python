@@ -14,15 +14,28 @@ class PostCreate(PostBase):
     pass
 
 
-'''
+"""
 class Post(BaseModel):  # sending limited property in frontend
     id: int
     title: str
     content: str
     published: bool
     created_at: datetime
+    
+    /////////
+    {
+        "Post": {
+            "published": true,
+            "owner_id": 2,
+            "title": "eee  search option Test-3",
+            "id": 22,
+            "content": "this is awesome ,",
+            "created_at": "2023-01-21T20:09:30.944754+02:00"
+        },
+        "votes": 0
+    },
 
-'''
+"""
 
 
 class UserOut(BaseModel):
@@ -39,6 +52,14 @@ class Post(PostBase):  # sending limited property in frontend
     created_at: datetime
     owner_id: int
     owner: UserOut
+
+    class Config:
+        orm_mode = True
+
+
+class PostOut(BaseModel):
+    Post: Post
+    votes: int
 
     class Config:
         orm_mode = True
@@ -64,6 +85,7 @@ class TokenData(BaseModel):
 
 
 # vote
+
 
 class Vote(BaseModel):
     post_id: int
