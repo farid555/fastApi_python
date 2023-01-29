@@ -30,3 +30,6 @@ alembic upgrade edf624778540 //created new table
 alembic current
 alembic heads (updated One)
 alembic history 
+alembic upgrade head
+alembic revision --autogenerate -m "Auto vote generate"
+
