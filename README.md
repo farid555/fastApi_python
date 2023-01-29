@@ -14,7 +14,7 @@ pip install psycopg2 ....install for MySQL
 
 https://alembic.sqlalchemy.org/en/latest/api/ddl.html
 alembic --help
-alembic revision --help (mack a change the database)
+alembic revision --help (make a change the database)
 alembic revision -m "create posts table"
 
 def upgrade():
@@ -25,3 +25,7 @@ def upgrade():
 def downgrade():
   removing the table
   pss
+
+alembic upgrade edf624778540 //created new table
+alembic current
+alembic heads (updated One)
