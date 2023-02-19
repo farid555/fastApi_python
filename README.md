@@ -34,9 +34,12 @@ alembic history
 alembic upgrade head
 alembic revision --autogenerate -m "Auto vote generate"
 
+<<<<<<< HEAD
 **********************************************************
 
 
  
  
 
+=======
+>>>>>>> 57bc445d115dbea1850a52dfad7a722616cd246d

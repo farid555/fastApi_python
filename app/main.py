@@ -25,7 +25,13 @@ app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(vote.router)
 
+<<<<<<< HEAD
 
 @app.get("/")
 def root():
     return {"message": "Hello there!!!!!"}
+=======
+@app.get("/")
+def root():
+    return {"message": "Hello there"}
+>>>>>>> 57bc445d115dbea1850a52dfad7a722616cd246d
