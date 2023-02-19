@@ -35,34 +35,7 @@ alembic upgrade head
 alembic revision --autogenerate -m "Auto vote generate"
 
 **********************************************************
-sudo -s [login as a root shell]
-whoami
-exit [for logout]
 
-sudo passwd root
-new-password:******
-
-su root
-
-//update command
-sudo apt update && sudo apt upgrade -y
-
-sudo apt install python3-pip
-sudo pip3 install virtualenv
-sudo apt install postgresql postgresql-contrib
-psql --version
-psql -U postgres 
-sudo cat /etc/passwd
-su - postgres [change the user in the machine]
-psql -U postgres [now i can login postgres database]
-\password postgres [create password]
-exit [it back to root user]
-cd /etc/postgresql/12/main
-ls
-sudo vi postgresql.conf
-sudo vi pg_hba.conf 
-psql -U postgres [login postgresql]
-hostname -I //  
 
  
  
